@@ -1,3 +1,5 @@
+#Note : Please start Redis server locally at port 6379 (default setting) for the API to work
+
 from flask import Flask, request, jsonify, render_template, session, send_file
 from python_resumable import UploaderFlask
 from flask_redis import FlaskRedis
@@ -93,6 +95,7 @@ def export_data_start():
 			while redis_client.get('export_operation_status').decode('utf-8') == 'Pause':
 				ctr = ctr+1
 				#If the export operation is paused for a long time i.e. 10000 ctr value (assumed) then cancel operation
+				#We can also make it wait infinitely by making it an infinite loop, depending on the need
 				if ctr == 10000:
 					redis_client.set("export_operation_status","False".encode('utf-8'))
 					break
@@ -147,6 +150,8 @@ def create_bulk_teams():
 				ctr = ctr+1
 				#To simulate real situation where it would take a lot of time I am manually making the process slow
 				time.sleep(2)
+				#If the team creation operation is paused for a long time i.e. 10000 ctr value (assumed) then cancel operation
+				#We can also make it wait infinitely by making it an infinite loop, depending on the need
 				if ctr == 10000:
 					redis_client.set("team_operation_status","False".encode('utf-8'))
 					break
@@ -185,4 +190,4 @@ def remove_team(i):
 	print("Removing created team : "+str(i))
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host ='0.0.0.0', port = 5001, debug = True)

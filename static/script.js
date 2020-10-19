@@ -21,7 +21,7 @@ if(!r.support){
 r.assignBrowse(document.getElementById('browseButton'));
 
 r.on('fileAdded', function(file, event){
-    window.alert("File selected, you can upload now"+r.uniqueIdentifier);
+    window.alert("File selected, you can upload now");
     fileSelected = 1;
   });
 
